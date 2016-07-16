@@ -4,7 +4,6 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
-import org.apache.log4j.pattern.IntegerPatternConverter;
 import org.apache.thrift.*;
 import org.apache.thrift.transport.*;
 import org.apache.thrift.protocol.*;
