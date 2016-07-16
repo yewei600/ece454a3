@@ -1,6 +1,7 @@
 package ece454;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.util.*;
 
 import org.apache.thrift.*;
@@ -60,6 +61,9 @@ public class StorageNode {
 	    }).start();
 
 	// TODO: create an ephemeral node in ZooKeeper
-	// curClient.create()....
+		String host = args[0];
+		host= (host.equalsIgnoreCase("localhost"))? InetAddress.getLocalHost().getHostName() : host;
+	 curClient.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath("/y52wei/",
+			 String.format("%s-%s",host,args[1]).getBytes());
     }
 }

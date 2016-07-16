@@ -4,6 +4,7 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
+import org.apache.log4j.pattern.IntegerPatternConverter;
 import org.apache.thrift.*;
 import org.apache.thrift.transport.*;
 import org.apache.thrift.protocol.*;
@@ -105,9 +106,23 @@ public class A3Client implements CuratorWatcher {
     InetSocketAddress getPrimary() throws Exception {
 	// TODO: add code to determine the hostname and port number
 	// of the primary replica
+	String smallest = curClient.getChildren().forPath("/y52wei").stream()
+			.min(new Comparator<String>() {
+				@Override
+				public int compare(String o1, String o2) {
+					return Integer.parseInt(o1)-Integer.parseInt(o2);
+				}
+			}).get();
+		String fullpath = "/y52wei/" + smallest;
+		byte[] ret = curClient.getData().forPath(fullpath);
+		String[] hostplusport = new String(ret).split("-");
+		String host = hostplusport[0];
+		int port = Integer.parseInt(hostplusport[1]);
 
-	// curClient.getChildren()....
-	return null;
+		InetSocketAddress loc = new InetSocketAddress(host, port);
+
+		log.info(loc.toString());
+		return loc;
     }
 
     KeyValueService.Client getThriftClient() {
