@@ -2,6 +2,7 @@ package ece454;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.*;
 
 import org.apache.thrift.*;
@@ -65,5 +66,12 @@ public class StorageNode {
 		host= (host.equalsIgnoreCase("localhost"))? InetAddress.getLocalHost().getHostName() : host;
 	 curClient.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath("/y52wei/",
 			 String.format("%s-%s",host,args[1]).getBytes());
+
+        curClient.getChildren().usingWatcher(new Watcher() {
+            @Override
+            public void process(WatchedEvent watchedEvent) {
+                log.info("****************" + watchedEvent.toString());
+            }
+        }).forPath("/y52wei");
     }
 }
