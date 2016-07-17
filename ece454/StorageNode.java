@@ -29,6 +29,8 @@ public class StorageNode {
 	    System.err.println("Usage: java ece454.StorageNode host port zkconnectstring zknode");
 	    System.exit(-1);
 	}
+    String zknode = args[3];
+
 
 	CuratorFramework curClient =
 	    CuratorFrameworkFactory.builder()
@@ -64,14 +66,15 @@ public class StorageNode {
 	// TODO: create an ephemeral node in ZooKeeper
 		String host = args[0];
 		host= (host.equalsIgnoreCase("localhost"))? InetAddress.getLocalHost().getHostName() : host;
-	 curClient.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath("/y52wei/",
+	 String nodeName = curClient.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(zknode,
 			 String.format("%s-%s",host,args[1]).getBytes());
+        log.info("YYYYYYYYYYYYYYYYYYOOOOOO"+nodeName);
 
         curClient.getChildren().usingWatcher(new Watcher() {
             @Override
             public void process(WatchedEvent watchedEvent) {
                 log.info("****************" + watchedEvent.toString());
             }
-        }).forPath("/y52wei");
+        }).forPath(zknode);
     }
 }
